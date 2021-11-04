@@ -13,7 +13,7 @@ final mainPageDataControllerProvider =
   return MainPageDataController();
 });
 
-final selectedMoviePosterURLProvider = StateProvider<dynamic>((ref) {
+final selectedMoviePosterURLProvider = StateProvider<String?>((ref) {
   final _movies = ref.watch(mainPageDataControllerProvider).movies;
 
   return _movies!.isNotEmpty ? _movies[0].posterURL() : null;
@@ -36,11 +36,12 @@ class MainPage extends ConsumerWidget {
     _mainPageDataController = watch(mainPageDataControllerProvider.notifier);
     _mainPageData = watch(mainPageDataControllerProvider);
 
-    _selectedMoviePosterURL = watch(selectedMoviePosterURLProvider);
+    
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
     _searchTextFieldController = TextEditingController();
     _searchTextFieldController!.text = _mainPageData.searchText!;
+    _selectedMoviePosterURL = watch(selectedMoviePosterURLProvider);
 
     return _buildUI();
   }
@@ -142,8 +143,13 @@ class MainPage extends ConsumerWidget {
       height: _deviceHeight! * 0.05,
       child: TextField(
         controller: _searchTextFieldController,
-        onSubmitted: (_input) =>
-            _mainPageDataController.updateTextSearch(_input),
+        onSubmitted: (_input) {
+          try {
+            _mainPageDataController.updateTextSearch(_input);
+          } catch (e) {
+            print(e);
+          }
+        },
         style: const TextStyle(
           color: Colors.white,
         ),

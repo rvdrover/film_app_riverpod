@@ -1,5 +1,7 @@
+import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
+
 import 'package:movie_app/models/app_config.dart';
 
 class Movie {
@@ -35,12 +37,12 @@ class Movie {
       releaseDate: _json['release_date'],
     );
   }
-  String posterURL(){
-    final AppConfig _appConfig =GetIt.instance.get<AppConfig>();
-    return '${_appConfig.BASE_IMAGE_API_URL}$posterPath';
+  String posterURL() {
+    final AppConfig _appConfig = GetIt.instance.get<AppConfig>();
+    if (posterPath != null) {
+      return '${_appConfig.BASE_IMAGE_API_URL}$posterPath';
+    } else {
+      return 'https://via.placeholder.com/200x300?text=No+Image';
+    }
   }
 }
- 
-        
-
-       
